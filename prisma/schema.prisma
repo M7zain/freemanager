@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://u274988421_admin:TP%23b%29d3BN5oY0SxoKByg%2AtG%28@srv1924.hstgr.io:3306/u274988421_pianotiles"
+}
+
+model Project {
+  id          String       @id @default(cuid())
+  name        String
+  category    String      // website, application, digital-marketing, graphic-design
+  description String?
+  pricingModel String     @default("hourly") // hourly, fixed
+  hourlyRate  Float?
+  fixedPrice  Float?
+  progress    Int         @default(0)
+  status      String      // active, completed, on-hold
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  timeEntries TimeEntry[]
+  payments    Payment[]
+}
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  date        DateTime
+  hours       Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   String
+  amount      Float
+  status      String   // pending, paid
+  dueDate     DateTime
+  paidDate    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Subject {
+  id          String       @id @default(cuid())
+  name        String
+  code        String
+  instructor  String
+  progress    Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assignments Assignment[]
+  notes       Note[]
+  weekProgress WeekProgress[]
+}
+
+model Assignment {
+  id          String   @id @default(cuid())
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  title       String
+  description String?
+  type        String   // assignment, midterm, final
+  dueDate     DateTime
+  status      String   // pending, completed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  title       String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WeekProgress {
+  id          String   @id @default(cuid())
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId   String
+  weekNumber  Int
+  isCompleted Boolean  @default(false)
+  isMidterm   Boolean  @default(false)
+  isFinal     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([subjectId, weekNumber])
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  username  String   @db.VarChar(50)
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("scores")
+} 
