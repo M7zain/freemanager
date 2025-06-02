@@ -10,8 +10,6 @@ import { Subject, WeekProgress , Assignment, Note } from '@prisma/client';
 type SubjectWithWeekProgress = Subject & { assignments: Assignment[] ,  weekProgress: WeekProgress[] , notes: Note[] };
 
 
-
-
 export default function SubjectDetailsPage({
   params,
 }: {
