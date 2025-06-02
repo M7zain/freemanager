@@ -1,4 +1,4 @@
-// app/university/subjects/[id]/assignments/page.tsx
+export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import AssignmentsList from '@/components/AssignmentsList'; // Reuse the UI as a component
