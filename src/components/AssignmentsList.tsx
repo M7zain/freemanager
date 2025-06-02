@@ -1,38 +1,11 @@
-'use client';
 
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Trash2 } from 'lucide-react';
 import { type Subject, type Assignment } from '@prisma/client';
+import DeleteButton from '@/components/DeleteButton'; 
 
 type SubjectWithAssignments = Subject & { assignments: Assignment[] };
 
 export default function AssignmentsList({ subject }: { subject: SubjectWithAssignments }) {
-  const router = useRouter();
-
-  const handleDelete = async (assignmentId: string) => {
-    if (!confirm('Are you sure you want to delete this assignment?')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/subjects/${subject.id}/assignments`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assignmentId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete assignment');
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.error('Error deleting assignment:', error);
-      alert('Failed to delete assignment');
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -63,13 +36,11 @@ export default function AssignmentsList({ subject }: { subject: SubjectWithAssig
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(assignment.id)}
-                className="text-red-500 hover:text-red-700 p-2"
-                title="Delete assignment"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
+              <DeleteButton
+                subjectId={subject.id}
+                itemId={assignment.id}
+                itemType="assignment"
+              />
             </div>
           </div>
         ))}
@@ -77,3 +48,4 @@ export default function AssignmentsList({ subject }: { subject: SubjectWithAssig
     </div>
   );
 }
+ 

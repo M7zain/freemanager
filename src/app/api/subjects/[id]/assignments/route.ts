@@ -94,7 +94,7 @@ export async function DELETE(
     // Add default week progress if not available
     const subjectWithWeekProgress = {
       ...updatedSubject,
-      weekProgress: updatedSubject.weekProgress || []
+      weekProgress: updatedSubject.progress || []
     };
 
     return NextResponse.json(subjectWithWeekProgress);

@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { notFound } from 'next/navigation';
-import NotesList from './notes/page';
-import AssignmentsList from './assignments/page';
-import { Subject, WeekProgress } from '@prisma/client';
+import NotesList from '@/components/NotesList';
+import AssignmentsList from '@/components/AssignmentsList';
+import { Subject, WeekProgress , Assignment, Note } from '@prisma/client';
 
-interface SubjectWithWeekProgress extends Subject {
-  weekProgress: WeekProgress[];
-}
+
+
+type SubjectWithWeekProgress = Subject & { assignments: Assignment[] ,  weekProgress: WeekProgress[] , notes: Note[] };
+
+
+
 
 export default function SubjectDetailsPage({
   params,
