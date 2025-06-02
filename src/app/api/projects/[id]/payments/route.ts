@@ -3,24 +3,18 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { projectId: string } }
 ) {
-  try {
-    const body = await request.json();
-    const { amount, dueDate } = body;
+  const { amount, dueDate } = await request.json();
 
-    const payment = await prisma.payment.create({
-      data: {
-        amount: parseFloat(amount),
-        dueDate: new Date(dueDate),
-        status: 'pending',
-        projectId: params.id,
-      },
-    });
+  const payment = await prisma.payment.create({
+    data: {
+      amount: parseFloat(amount),
+      dueDate: new Date(dueDate),
+      status: 'pending',
+      projectId: params.projectId,
+    },
+  });
 
-    return NextResponse.json(payment);
-  } catch (error) {
-    console.error('Error creating payment:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
-  }
-} 
+  return NextResponse.json(payment);
+}
